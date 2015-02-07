@@ -18,3 +18,7 @@ You will also need to make sure that the DNS for your site, eg `www.nicesite.com
 server on which Jekbox is installed.
 
 Jexbox does not currently support wildcard domains, eg; `*.nicesite.com`.
+
+##TODO
+Instructions for using a data container to persist Dropbox setup. All it will mean is that you don't
+have to link your account every time.
