@@ -15,6 +15,6 @@ On first installation you will be asked to connect your Dropbox account. Watch t
 link to connect your account to Jekbox.
 
 You will also need to make sure that the DNS for your site, eg `www.nicesite.com` points to the
-serve on which Jekbox is installed.
+server on which Jekbox is installed.
 
 Jexbox does not currently support wildcard domains, eg; `*.nicesite.com`.
