@@ -92,7 +92,7 @@ class Jekbox
       end
     end
 
-    # Given a web request from the proxy server, determine the site to server
+    # Given a web request from the proxy server, determine the site to serve
     def find_destination(request)
       sites = sites_json
       hosts = sites.keys
