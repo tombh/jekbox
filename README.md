@@ -5,6 +5,14 @@ Dropbox that are named using a domain name. For example, if you place a folder i
 named `www.nicesite.com` then Jekbox will build the contents with Jekyll and respond to all
 requests to the `www.nicesite.com` by serving the contents of that folder.
 
+Sites are served by Jekyll's default server (`jekyll server`), which also watches
+for any changes to your site and automatically rebuilds. The Jekyll servers sit behind a simple
+reverse proxy, so you can have multiple sites on one Jekbox installation.
+
+One benefit of hosting sites from your Dropbox folder is that you can share the folders with other
+people. So, if you're making a website for a friend or a client, they can edit they're site simply
+by changing files in their personal Dropbox folder.
+
 ## Installation
 `docker pull tombh/jekbox`
 
@@ -22,3 +30,7 @@ Jexbox does not currently support wildcard domains, eg; `*.nicesite.com`.
 ##TODO
 Instructions for using a data container to persist Dropbox setup. All it will mean is that you don't
 have to link your account every time.
+
+Or maybe even automate the browser connection flow using Nokogiri. That way your Dropbox username
+and pasword could be provided as ENV vars and you wouldn't have to manually make the connection
+every time.
