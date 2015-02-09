@@ -17,7 +17,7 @@ by changing files in their personal Dropbox folder.
 `docker pull tombh/jekbox`
 
 ##Usage
-`docker run --restart always --publish 80:80 --name jekbox jekbox`
+`docker run --restart always --publish 80:80 --name jekbox tombh/jekbox`
 
 On first installation you will be asked to connect your Dropbox account. Watch the logs for the
 link to connect your account to Jekbox.
