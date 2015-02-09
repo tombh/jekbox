@@ -82,7 +82,9 @@ class Jekbox
 
     # sites.json keeps track of the booted sites and the ports they are being served on
     def sites_json
-      JSON.parse File.read "#{PROJECT_ROOT}/sites.json"
+      path = "#{PROJECT_ROOT}/sites.json"
+      return {} unless File.exist? path
+      JSON.parse File.read path
     end
 
     # Save changes to sites.json back to disk
