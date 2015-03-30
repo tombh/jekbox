@@ -72,8 +72,8 @@ class Jekbox
 
     # Start a site using the Jekyll gem
     def boot_site(site)
-      log "Attempting to launch #{site} in 30 seconds..."
-      sleep 30
+      log "Attempting to launch #{site} in 60 seconds..."
+      sleep 60
       sites = sites_json
       sites[site] = {}
       sites[site]['port'] = 'LAUNCHME'
