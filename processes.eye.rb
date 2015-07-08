@@ -34,6 +34,11 @@ Eye.application 'Jekbox' do
   # The proxy server forwards requests to the appropriate Jekyll server instance
   process :reverse_proxy do
     pid_file 'thin.pid'
-    start_command 'bundle exec thin start -R config.ru -p 80 -d -l jekbox.log -P thin.pid'
+    start_command 'bundle exec thin start ' \
+                    '-R config.ru ' \
+                    '-p 80 ' \
+                    '-l jekbox.log ' \
+                    '-P thin.pid ' \
+                    '-d'
   end
 end

@@ -17,20 +17,12 @@ by changing files in their personal Dropbox folder.
 `docker pull tombh/jekbox`
 
 ##Usage
-`docker run --restart always --publish 80:80 --name jekbox tombh/jekbox`
+`docker run --restart always --publish 80:80 --volume $HOME/.jekbox/Dropbox:/root/Dropbox --volume $HOME/.jekbox/.dropbox:/root/.dropbox --name jekbox tombh/jekbox`
 
 On first installation you will be asked to connect your Dropbox account. Watch the logs for the
 link to connect your account to Jekbox.
 
 You will also need to make sure that the DNS for your site, eg `www.nicesite.com` points to the
-server on which Jekbox is installed.
+server on which Jekbox is installed. You will do this from the admin interface of your domain registrar.
 
 Jexbox does not currently support wildcard domains, eg; `*.nicesite.com`.
-
-##TODO
-Instructions for using a data container to persist Dropbox setup. All it will mean is that you don't
-have to link your account every time.
-
-Or maybe even automate the browser connection flow using Nokogiri. That way your Dropbox username
-and pasword could be provided as ENV vars and you wouldn't have to manually make the connection
-every time.

@@ -18,7 +18,12 @@ class Jekbox
 
     def all_dropbox_paths
       return [] unless File.exist? DROPBOX_PATH
-      paths = Dir.entries(DROPBOX_PATH) - ['.', '..', '.dropbox', '.dropbox.cache']
+      paths = Dir.entries(DROPBOX_PATH) - [
+        '.',
+        '..',
+        '.dropbox',
+        '.dropbox.cache'
+      ]
       paths.map { |p| File.expand_path(File.join(DROPBOX_PATH, p)) }
     end
 
@@ -28,8 +33,8 @@ class Jekbox
       end
     end
 
-    # Jekbox convention is that any folder that has a name that looks like a domain will be served
-    # as a Jekyll site.
+    # Jekbox convention is that any folder that has a name that looks like a
+    # domain will be served as a Jekyll site.
     def site_folders
       all_dropbox_folders.select do |path|
         # *sigh* a '.' is the only real indicator of a domain.
@@ -45,8 +50,9 @@ class Jekbox
       site_folders.map { |p| p.split('/').last }
     end
 
-    # Monitor paths in the Dropbox folder and exclude all paths that don't contain
-    # a Jekbox site.
+    # Monitor paths in the Dropbox folder and exclude all paths that don't
+    # contain a Jekbox site.
+    # Called from processes.eye
     def selective_sync
       log 'Starting selective sync daemon...'
       loop do
@@ -59,6 +65,7 @@ class Jekbox
       end
     end
 
+    # Called from processes.eye
     def jekyll_servers
       log 'Starting Jekyll servers daemon...'
       loop do
@@ -81,7 +88,8 @@ class Jekbox
       sh "bundle exec eye load #{PROJECT_ROOT}/lib/server.eye.rb"
     end
 
-    # sites.json keeps track of the booted sites and the ports they are being served on
+    # sites.json keeps track of the booted sites and the ports they are being
+    # served on
     def sites_json
       path = "#{PROJECT_ROOT}/sites.json"
       return {} unless File.exist? path
