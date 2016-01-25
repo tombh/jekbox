@@ -27,15 +27,15 @@ Eye.application 'Jekbox' do
 
       start_command "bundle exec jekyll server --port #{port} --trace"
 
-      trigger :transition1, to: :starting, do: lambda do
+      trigger :transition1, to: :starting, do: (lambda do
         sites[site]['port'] = port
         Jekbox.save_sites_json(sites)
-      end
+      end)
 
-      trigger :transition2, to: :down, do: lambda do
+      trigger :transition2, to: :down, do: (lambda do
         sites.delete site
         Jekbox.save_sites_json(sites)
-      end
+      end)
     end
   end
 end

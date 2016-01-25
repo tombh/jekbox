@@ -71,6 +71,7 @@ class Jekbox
       loop do
         site_names.each do |site|
           port = sites_json.fetch(site, {}).fetch('port', 0).to_i
+          # TODO: stop this from blocking
           boot_site(site) unless port > 0
         end
         sleep 10
