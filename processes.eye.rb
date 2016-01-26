@@ -24,15 +24,15 @@ Eye.application 'Jekbox' do
     start_command 'ruby -r ./lib/jekbox.rb -e Jekbox.selective_sync'
   end
 
-  # Start, monitor and stop Jekyll servers
-  process :jekyll_servers do
-    pid_file 'jekyll_servers.pid'
+  # Rebuild sites when files change
+  process :builder do
+    pid_file 'builder.pid'
     daemonize true
-    start_command 'ruby -r ./lib/jekbox.rb -e Jekbox.jekyll_servers'
+    start_command 'ruby -r ./lib/builder.rb -e Builder.run'
   end
 
-  # The proxy server forwards requests to the appropriate Jekyll server instance
-  process :reverse_proxy do
+  # The server uses the domain name to find the correct file path
+  process :server do
     pid_file 'thin.pid'
     start_command 'bundle exec thin start ' \
                     '-R config.ru ' \

@@ -1,3 +1,3 @@
-require './lib/proxy'
+require './lib/server'
 
-run Proxy.new
+run Server.new

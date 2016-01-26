@@ -33,14 +33,11 @@ class Jekbox
       end
     end
 
-    # Jekbox convention is that any folder that has a name that looks like a
-    # domain will be served as a Jekyll site.
+    # Jekbox convention is that any folder that has a `_jekbox.yml` file is
+    # condsidered a Jekbox site
     def site_folders
       all_dropbox_folders.select do |path|
-        # *sigh* a '.' is the only real indicator of a domain.
-        # Unless we require that folder names have 'http://' in them?
-        # TODO: perhaps look at the contents of the folder
-        path.include? '.'
+        File.exist? File.join path, '_jekbox.yml'
       end
     end
 
@@ -59,60 +56,10 @@ class Jekbox
         excludable = all_dropbox_paths - site_folders
         excludable.each do |path|
           log "Excluding #{path}"
-          sh "dropbox.py exclude add '#{path.gsub("'", "\'")}'"
+          sh "dropbox.py exclude add '#{path.tr("'", "\'")}'"
         end
         sleep 3
       end
-    end
-
-    # Called from processes.eye
-    def jekyll_servers
-      log 'Starting Jekyll servers daemon...'
-      loop do
-        site_names.each do |site|
-          port = sites_json.fetch(site, {}).fetch('port', 0).to_i
-          # TODO: stop this from blocking
-          boot_site(site) unless port > 0
-        end
-        sleep 10
-      end
-    end
-
-    # Start a site using the Jekyll gem
-    def boot_site(site)
-      log "Attempting to launch #{site} in 60 seconds..."
-      sleep 60
-      sites = sites_json
-      sites[site] = {}
-      sites[site]['port'] = 'LAUNCHME'
-      save_sites_json sites
-      sh "bundle exec eye load #{PROJECT_ROOT}/lib/server.eye.rb"
-    end
-
-    # sites.json keeps track of the booted sites and the ports they are being
-    # served on
-    def sites_json
-      path = "#{PROJECT_ROOT}/sites.json"
-      return {} unless File.exist? path
-      JSON.parse File.read path
-    end
-
-    # Save changes to sites.json back to disk
-    def save_sites_json(json)
-      File.open("#{PROJECT_ROOT}/sites.json", 'w') do |f|
-        f.write(json.to_json)
-      end
-    end
-
-    # Given a web request from the proxy server, determine the site to serve
-    def find_destination(request)
-      sites = sites_json
-      hosts = sites.keys
-      return false unless hosts.include? request.host
-      site = sites[request.host]
-      forwarding_address = "http://localhost:#{site['port']}#{request.path}"
-      puts "Proxying request to: #{forwarding_address}"
-      URI.parse forwarding_address
     end
   end
 end

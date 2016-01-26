@@ -1,13 +1,13 @@
-FROM atlashealth/ruby:2.2.0
+FROM ruby:2.3.0-slim
 
 RUN apt-get update \
   && apt-get install -y \
     curl \
+    build-essential \
     python-minimal \
     git-core \
     nodejs \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/
+  && apt-get clean
 
 RUN curl -L "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf - -C /usr/local
 
