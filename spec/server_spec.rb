@@ -11,14 +11,32 @@ describe Server do
   end
 
   describe 'Find paths' do
-    it 'should find the index.html file when a URL without a file is requested' do
-      get 'http://jekbox.example.com'
-      expect(last_response.body).to eq "The index page\n"
+    context 'Finding the index.html file when a URL without a file is requested' do
+      it 'should use index.html when root is requested' do
+        get 'http://jekbox.example.com'
+        expect(last_response.body).to eq "The index page\n"
+      end
+
+      it 'should use index.html when a / is present' do
+        get 'http://jekbox.example.com/deep/'
+        expect(last_response.body).to eq "Deep page\n"
+      end
+
+      it 'should use index.html when a / is not present' do
+        get 'http://jekbox.example.com/deep'
+        expect(last_response.body).to eq "Deep page\n"
+      end
     end
 
     it 'should find a normal file' do
-      get 'http://jekbox.example.com/foo.css'
+      get 'http://jekbox.example.com/assets/foo.css'
       expect(last_response.body).to eq "body {}\n"
+    end
+
+    it 'should find a normal file' do
+      expect do
+        get 'http://jekbox.example.com/../../../spec_helper.rb'
+      end.to raise_error RuntimeError
     end
   end
 end

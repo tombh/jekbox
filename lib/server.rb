@@ -10,18 +10,19 @@ class Server
   end
 
   def file_path
-    if @request.path_info.end_with?('/')
-      normalized = @request.path_info + 'index.html'
-    else
-      normalized = @request.path_info
-    end
     @root = File.join Jekbox::DROPBOX_PATH, @request.host
-    File.join @root, '_site', normalized
+    path = File.expand_path File.join @root, '_site', @request.path_info
+    with_index = File.join path, 'index.html'
+    if File.file? path
+      path
+    elsif File.file? with_index
+      with_index
+    end
   end
 
   def build_response
     @file = file_path
-    if File.exist? @file
+    if @file
       build_file_response
     else
       build_404
@@ -30,6 +31,7 @@ class Server
   end
 
   def build_file_response
+    fail unless @file.include? @root # Prevent malicious path requests
     file_info = FileHandler.file_info @file
     body = file_info[:body]
     time = file_info[:time]
