@@ -1,13 +1,8 @@
 # Jekbox
 
 Jekbox uses Dropbox and Jekyll to automatically create and serve sites based on folders in your
-Dropbox that are named using a domain name. For example, if you place a folder in your Dropbox
-named `www.nicesite.com` then Jekbox will build the contents with Jekyll and respond to all
-requests to the `www.nicesite.com` by serving the contents of that folder.
-
-Sites are served by Jekyll's default server (`jekyll server`), which also watches
-for any changes to your site and automatically rebuilds. The Jekyll servers sit behind a simple
-reverse proxy, so you can have multiple sites on one Jekbox installation.
+Dropbox. Any folder with the `_jekbox.yml` will be treated as a Jekox site. Jekbox will server as many sites as there
+are folders with a `_jekbox.yml` file.
 
 One benefit of hosting sites from your Dropbox folder is that you can share the folders with other
 people. So, if you're making a website for a friend or a client, they can edit they're site simply
@@ -33,4 +28,7 @@ link to connect your account to Jekbox.
 You will also need to make sure that the DNS for your site, eg `www.nicesite.com` points to the
 server on which Jekbox is installed. You will do this from the admin interface of your domain registrar.
 
-Jexbox does not currently support wildcard domains, eg; `*.nicesite.com`.
+##TODO
+  * Jexbox does not currently support wildcard domains, eg; `*.nicesite.com`. Let\'s use the `_jekbox.yml` file to specify
+    which site answers to which domains.
+  * Provide means to redirect 'www' to apex and vice-versa.
