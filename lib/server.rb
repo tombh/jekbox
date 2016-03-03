@@ -67,7 +67,7 @@ class Server
   end
 
   def build_file_response
-    fail unless @file.include? @root # Prevent malicious path requests
+    raise unless @file.include? @root # Prevent malicious path requests
     file_info = FileHandler.file_info @file
     body = file_info[:body]
     time = file_info[:time]

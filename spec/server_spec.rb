@@ -21,6 +21,17 @@ describe Server do
     end
   end
 
+  describe 'Handling headers' do
+    it 'should return 304 for unchanged files' do
+      file = File.join Jekbox::DROPBOX_PATH, 'example_site_1/_site/index.html'
+      time = FileHandler.file_info(file)[:time]
+      header 'IF_MODIFIED_SINCE', time
+      get 'http://www.example1.com'
+      expect(last_response.status).to eq 304
+      expect(last_response.header['Last-Modified']).to eq time
+    end
+  end
+
   describe 'Find paths' do
     context 'Finding the index.html file when a URL without a file is requested' do
       it 'should use index.html when root is requested' do
