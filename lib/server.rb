@@ -16,14 +16,22 @@ class Server
     ].any?
   end
 
-  def file_path
+  def possible_file_paths
     @root = domain_to_folder
-    path = File.expand_path File.join @root, '_site', @request.path_info
-    with_index = File.join path, 'index.html'
-    if File.file? path
-      path
-    elsif File.file? with_index
-      with_index
+    path = File.expand_path(File.join(@root, '_site', @request.path_info))
+    [
+      # If this is just a normal request for a file, eg; example.com/assets/foo.css
+      path,
+      # If this is a request for pretty permalink, eg; example.com/blog-post
+      File.join("#{path}.html"),
+      # If this is a request for the index of a folder, eg; example.com/all-posts/
+      File.join(path, 'index.html')
+    ]
+  end
+
+  def file_path
+    possible_file_paths.find do |path|
+      File.file? path
     end
   end
 
@@ -39,7 +47,7 @@ class Server
     return unless opposite_domain_is_canonical?
     @response = [
       301,
-      { 'Location' => opposite_domain },
+      { 'Location' => "http://#{opposite_domain}" },
       []
     ]
   end
