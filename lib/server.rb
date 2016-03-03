@@ -5,12 +5,19 @@ require_relative 'file_handler.rb'
 class Server
   def call(env)
     @request = Rack::Request.new(env)
-    build_response
+    build_response unless pre_response_required?
     @response
   end
 
+  def pre_response_required?
+    [
+      return_404_if_domain_not_managed,
+      redirect_if_opposite_domain_is_canonical
+    ].any?
+  end
+
   def file_path
-    @root = File.join Jekbox::DROPBOX_PATH, @request.host
+    @root = domain_to_folder
     path = File.expand_path File.join @root, '_site', @request.path_info
     with_index = File.join path, 'index.html'
     if File.file? path
@@ -18,6 +25,35 @@ class Server
     elsif File.file? with_index
       with_index
     end
+  end
+
+  def domain_to_folder
+    Jekbox.all_config[@request.host]['location']
+  end
+
+  def return_404_if_domain_not_managed
+    build_404 unless Jekbox.all_config[@request.host]
+  end
+
+  def redirect_if_opposite_domain_is_canonical
+    return unless opposite_domain_is_canonical?
+    @response = [
+      301,
+      { 'Location' => opposite_domain },
+      []
+    ]
+  end
+
+  def opposite_domain
+    if @request.host.start_with? 'www'
+      @request.host.gsub(/^www\./, '')
+    else
+      "www.#{@request.host}"
+    end
+  end
+
+  def opposite_domain_is_canonical?
+    Jekbox.all_config.key? opposite_domain
   end
 
   def build_response
@@ -38,7 +74,7 @@ class Server
     @headers = { 'Last-Modified' => time }
 
     if time == @request.env['HTTP_IF_MODIFIED_SINCE']
-      @response = [304, headers, []]
+      @response = [304, @headers, []]
     else
       return_200 body
     end
@@ -75,6 +111,7 @@ class Server
   end
 
   def custom_404
+    return unless @root
     filename = File.join @root, '/404.html'
     return nil unless File.exist? filename
     filename ? FileHandler.file_info(filename)[:body] : nil

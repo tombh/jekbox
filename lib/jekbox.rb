@@ -1,4 +1,5 @@
 require 'json'
+require 'yaml'
 
 # Shared Jekbox code
 class Jekbox
@@ -41,10 +42,15 @@ class Jekbox
       end
     end
 
-    # Sites without the path. So /home/user/Dropbox/www.example.com just becomes
-    # www.example.com
-    def site_names
-      site_folders.map { |p| p.split('/').last }
+    # Hash of all the _jekbox.yml config, indexed by domain name
+    def all_config
+      hash = {}
+      site_folders.each do |folder|
+        config = YAML.load File.read File.join folder, '_jekbox.yml'
+        hash[config['domain']] = config
+        hash[config['domain']]['location'] = folder
+      end
+      hash
     end
 
     # Monitor paths in the Dropbox folder and exclude all paths that don't
