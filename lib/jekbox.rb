@@ -38,7 +38,7 @@ class Jekbox
     # condsidered a Jekbox site
     def site_folders
       all_dropbox_folders.select do |path|
-        File.exist? File.join path, '_jekbox.yml'
+        path.include?('www.') || File.exist?(File.join path, '_jekbox.yml')
       end
     end
 
