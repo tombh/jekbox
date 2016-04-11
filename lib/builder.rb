@@ -17,6 +17,7 @@ class Builder
       Listen.to(folder, ignore: %r{_site\/|latest_build}) do |_modified, _added, _removed|
         `cd #{folder} && jekyll build &>> #{build_log}`
       end.start
+      sleep
     end
   end
 end
