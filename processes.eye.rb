@@ -28,7 +28,7 @@ Eye.application 'Jekbox' do
   process :builder do
     pid_file 'builder.pid'
     daemonize true
-    # start_command 'ruby -r ./lib/builder.rb -e Builder.run'
+    start_command 'ruby -r ./lib/builder.rb -e Builder.run'
   end
 
   # The server uses the domain name to find the correct file path

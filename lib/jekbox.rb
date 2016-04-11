@@ -34,15 +34,17 @@ class Jekbox
       end
     end
 
-    # Jekbox convention is that any folder that has a `_jekbox.yml` file is
-    # condsidered a Jekbox site
+    # Jekbox convention is that any folder that has 'www.' is considered a Jekbox site.
+    # This is important because it means that it won't get excluded by the selective_sync()
+    # TODO: consider adding better folder name detection beyond just 'www.'
     def site_folders
       all_dropbox_folders.select do |path|
-        path.include?('www.') || File.exist?(File.join path, '_jekbox.yml')
+        path.include?('www.') || File.exist?(File.join(path, '_jekbox.yml'))
       end
     end
 
-    # Hash of all the _jekbox.yml config, indexed by domain name
+    # Hash of all the _jekbox.yml config, indexed by domain name.
+    # TODO: fail better when a folder exists but has not yet had its `_jekbox.yml` synced.
     def all_config
       hash = {}
       site_folders.each do |folder|
